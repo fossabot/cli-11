@@ -65,7 +65,7 @@ func main() {
 	// commands. This makes completion only work for the configured backends and
 	// not the overwritten ones.
 	var err error
-	if f.Config, err = config.LoadDefaultConfigFile(); err != nil {
+	if f.Config, err = config.LoadDefault(); err != nil {
 		printError(f.IO.ErrOut(), err, nil)
 		os.Exit(2)
 	}
@@ -85,13 +85,10 @@ func main() {
 		}
 	}()
 
-	// Spawn the root command and enhance all its subcommands with defaults for
-	// Args and ValidArgsFunction instead of setting them on each command one by
-	// one. However, in order for autocompletion to work the root command can't
-	// have Args set to "NoArgs".
 	rootCmd := root.NewRootCmd(f)
+
 	cmdutil.DefaultCompletion(rootCmd)
-	rootCmd.Args = nil
+	cmdutil.InheritRootPersistenPreRun(rootCmd)
 
 	// Finally execute the root command.
 	if err := rootCmd.ExecuteContext(ctx); err != nil {

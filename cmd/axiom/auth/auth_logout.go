@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"time"
 
@@ -29,19 +28,19 @@ func newLogoutCmd(f *cmdutil.Factory) *cobra.Command {
 		Factory: f,
 	}
 
-	cmd := &cobra.Command{
+	cmd := &cobra.Command{ //nolint:dupl
 		Use:   "logout [<backend-alias>] [-f|--force]",
 		Short: "Logout of an axiom instance",
 
 		DisableFlagsInUseLine: true,
 
 		Args:              cobra.MaximumNArgs(1),
-		ValidArgsFunction: backendCompletionFunc(f),
+		ValidArgsFunction: backendCompletionFunc(f.Config),
 
 		Example: heredoc.Doc(`
 			# Select the backend to log out of:
 			$ axiom auth logout
-
+			
 			# Log out of a specified backend:
 			$ axiom auth logout axiom-eu-west-1
 		`),
@@ -53,7 +52,7 @@ func newLogoutCmd(f *cmdutil.Factory) *cobra.Command {
 				opts.Alias = args[0]
 			}
 
-			if err := cmdutil.Needs(
+			if err := cmdutil.ChainRunFuncs(
 				cmdutil.NeedsBackends(f),
 				cmdutil.NeedsValidBackend(f, opts.Alias),
 			)(cmd, args); err != nil {
@@ -76,23 +75,14 @@ func newLogoutCmd(f *cmdutil.Factory) *cobra.Command {
 }
 
 func completeLogout(opts *logoutOptions) error {
-	backends := opts.Config.BackendAliases()
-	if len(backends) == 0 {
-		return errors.New("no backends configured")
-	}
-
 	return survey.AskOne(&survey.Select{
 		Message: "Which backend to log out off?",
-		Options: backends,
+		Options: opts.Config.BackendAliases(),
 	}, &opts.Alias, opts.IO.SurveyIO())
 }
 
 func runLogout(ctx context.Context, opts *logoutOptions) error {
 	cs := opts.IO.ColorScheme()
-
-	if _, ok := opts.Config.Backends[opts.Alias]; !ok {
-		return fmt.Errorf("backend %s not configured", cs.Bold(opts.Alias))
-	}
 
 	if !opts.IO.IsStdinTTY() && !opts.Force {
 		return cmdutil.ErrSilent

@@ -12,7 +12,7 @@ import (
 // Factory bundles resources used by most commands.
 type Factory struct {
 	// Config is the configuration.
-	Config config.Config
+	Config *config.Config
 	// IO is the IO to be used instead of StdIn, StdOut and StdErr.
 	IO *terminal.IO
 }

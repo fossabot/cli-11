@@ -66,7 +66,7 @@ func Test_newHelpTopic(t *testing.T) {
 			cmd := newHelpTopic(tt.topic)
 			cmd.SetArgs(append(tt.args, tt.flags...))
 
-			testutil.SetupCmd(cmd)
+			_ = testutil.SetupCmd(cmd)
 
 			if _, err := cmd.ExecuteC(); tt.wantsErr {
 				assert.Error(t, err)

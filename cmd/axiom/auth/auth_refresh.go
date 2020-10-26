@@ -26,19 +26,19 @@ func newRefreshCmd(f *cmdutil.Factory) *cobra.Command {
 		Factory: f,
 	}
 
-	cmd := &cobra.Command{
+	cmd := &cobra.Command{ //nolint:dupl
 		Use:   "refresh [<backend-alias>] [-f|--force]",
 		Short: "Refresh authentication credentials of an axiom instance",
 
 		DisableFlagsInUseLine: true,
 
 		Args:              cobra.MaximumNArgs(1),
-		ValidArgsFunction: backendCompletionFunc(f),
+		ValidArgsFunction: backendCompletionFunc(f.Config),
 
 		Example: heredoc.Doc(`
 			# Select the backend to refresh the authentication credentials for:
 			$ axiom auth refresh
-
+			
 			# Refresh authentication credentials for a specified backend:
 			$ axiom auth refresh axiom-eu-west-1
 		`),
@@ -50,7 +50,7 @@ func newRefreshCmd(f *cmdutil.Factory) *cobra.Command {
 				opts.Alias = args[0]
 			}
 
-			if err := cmdutil.Needs(
+			if err := cmdutil.ChainRunFuncs(
 				cmdutil.NeedsBackends(f),
 				cmdutil.NeedsValidBackend(f, opts.Alias),
 			)(cmd, args); err != nil {
@@ -82,10 +82,7 @@ func completeRefresh(opts *refreshOptions) error {
 func runRefresh(ctx context.Context, opts *refreshOptions) error {
 	cs := opts.IO.ColorScheme()
 
-	backend, ok := opts.Config.Backends[opts.Alias]
-	if !ok {
-		return fmt.Errorf("backend %s not configured", cs.Bold(opts.Alias))
-	}
+	backend := opts.Config.Backends[opts.Alias]
 
 	stop := opts.IO.StartProgressIndicator()
 	defer stop()

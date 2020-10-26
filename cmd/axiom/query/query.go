@@ -61,7 +61,7 @@ func NewQueryCmd(f *cmdutil.Factory) *cobra.Command {
 		Example: heredoc.Doc(`
 			# Interactively query a dataset:
 			$ axiom query
-						
+			
 			# Query the "logs" dataset for the servers having the best
 			# latencies using the axiom query language:
 			$ axiom query -d logs -q "select server, min(ping) group by server"
@@ -72,7 +72,7 @@ func NewQueryCmd(f *cmdutil.Factory) *cobra.Command {
 		},
 
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := cmdutil.Needs(
+			if err := cmdutil.ChainRunFuncs(
 				cmdutil.NeedsActiveBackend(f),
 				cmdutil.NeedsDatasets(f),
 			)(cmd, args); err != nil {

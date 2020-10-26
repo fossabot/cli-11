@@ -8,7 +8,7 @@ require (
 	github.com/MakeNowJust/heredoc v1.0.0
 	github.com/TylerBrock/colorjson v0.0.0-20200706003622-8a50f05110d2
 	github.com/briandowns/spinner v1.11.1
-	github.com/cli/cli v1.1.0
+	github.com/cli/cli v1.2.0
 	github.com/golangci/golangci-lint v1.32.0
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510
 	github.com/goreleaser/goreleaser v0.145.0

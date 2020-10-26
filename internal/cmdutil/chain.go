@@ -70,8 +70,8 @@ var (
 // PreRunE, RunE, PostRunE and PersistentPostRunE.
 type RunFunc func(cmd *cobra.Command, args []string) error
 
-// Needs chains one or more RunFunc's.
-func Needs(fns ...RunFunc) RunFunc {
+// ChainRunFuncs chains one or more RunFunc's.
+func ChainRunFuncs(fns ...RunFunc) RunFunc {
 	return func(cmd *cobra.Command, args []string) error {
 		for _, fn := range fns {
 			if err := fn(cmd, args); err != nil {
@@ -84,7 +84,7 @@ func Needs(fns ...RunFunc) RunFunc {
 
 // NeedsRootPersistentPreRunE executes the root commands PersistentPreRunE
 // function.
-func NeedsRootPersistentPreRunE(f *Factory) RunFunc {
+func NeedsRootPersistentPreRunE() RunFunc {
 	return func(cmd *cobra.Command, args []string) error {
 		return cmd.Root().PersistentPreRunE(cmd, args)
 	}

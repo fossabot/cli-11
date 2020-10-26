@@ -8,17 +8,20 @@ import (
 	"github.com/axiomhq/cli/internal/config"
 	"github.com/axiomhq/cli/pkg/version"
 
+	// Core commands
+	ingestCmd "github.com/axiomhq/cli/cmd/axiom/ingest"
+	queryCmd "github.com/axiomhq/cli/cmd/axiom/query"
+	streamCmd "github.com/axiomhq/cli/cmd/axiom/stream"
+
+	// Management commands
+	configCmd "github.com/axiomhq/cli/cmd/axiom/config"
+	datasetCmd "github.com/axiomhq/cli/cmd/axiom/dataset"
+	integrateCmd "github.com/axiomhq/cli/cmd/axiom/integrate"
+
 	// Additional commands
 	authCmd "github.com/axiomhq/cli/cmd/axiom/auth"
 	completionCmd "github.com/axiomhq/cli/cmd/axiom/completion"
 	versionCmd "github.com/axiomhq/cli/cmd/axiom/version"
-
-	// Code command
-	datasetCmd "github.com/axiomhq/cli/cmd/axiom/dataset"
-	ingestCmd "github.com/axiomhq/cli/cmd/axiom/ingest"
-	integrateCmd "github.com/axiomhq/cli/cmd/axiom/integrate"
-	queryCmd "github.com/axiomhq/cli/cmd/axiom/query"
-	streamCmd "github.com/axiomhq/cli/cmd/axiom/stream"
 )
 
 // NewRootCmd creates and returns the root command.
@@ -35,8 +38,6 @@ func NewRootCmd(f *cmdutil.Factory) *cobra.Command {
 
 		SilenceErrors: true,
 		SilenceUsage:  true,
-
-		// Breaks completion when uncommented.
 
 		Example: heredoc.Doc(`
 			$ axiom auth login
@@ -83,17 +84,20 @@ func NewRootCmd(f *cmdutil.Factory) *cobra.Command {
 	// Active backend overwrite
 	cmd.PersistentFlags().StringVarP(&backendOverwrite, "backend", "B", "", "Backend to use by default")
 
-	// Additional commands
-	cmd.AddCommand(authCmd.NewAuthCmd(f))
-	cmd.AddCommand(completionCmd.NewCompletionCmd())
-	cmd.AddCommand(versionCmd.NewVersionCmd(version.Print("Axiom CLI")))
-
 	// Core commands
-	cmd.AddCommand(datasetCmd.NewDatasetCmd(f))
 	cmd.AddCommand(ingestCmd.NewIngestCmd(f))
-	cmd.AddCommand(integrateCmd.NewIntegrateCmd(f))
 	cmd.AddCommand(queryCmd.NewQueryCmd(f))
 	cmd.AddCommand(streamCmd.NewStreamCmd(f))
+
+	// Management commands
+	cmd.AddCommand(configCmd.NewConfigCmd(f))
+	cmd.AddCommand(datasetCmd.NewDatasetCmd(f))
+	cmd.AddCommand(integrateCmd.NewIntegrateCmd(f))
+
+	// Additional commands
+	cmd.AddCommand(authCmd.NewAuthCmd(f))
+	cmd.AddCommand(completionCmd.NewCompletionCmd(f))
+	cmd.AddCommand(versionCmd.NewVersionCmd(version.Print("Axiom CLI")))
 
 	// Help topics
 	cmd.AddCommand(newHelpTopic("environment"))

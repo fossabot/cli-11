@@ -23,6 +23,10 @@ func NewIntegrateCmd(f *cmdutil.Factory) *cobra.Command {
 			# Get kickstarted for Axiom log shipping on your vercel project
 			$ axiom integrate vercel
 		`),
+
+		Annotations: map[string]string{
+			"IsManagement": "true",
+		},
 	}
 
 	return cmd

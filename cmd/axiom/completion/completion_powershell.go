@@ -2,9 +2,11 @@ package completion
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/axiomhq/cli/internal/cmdutil"
 )
 
-func newPowershellCmd() *cobra.Command {
+func newPowershellCmd(f *cmdutil.Factory) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "powershell",
 		Short: "Generate shell completion script for powershell",
@@ -12,8 +14,8 @@ func newPowershellCmd() *cobra.Command {
 
 		DisableFlagsInUseLine: true,
 
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return cmd.Root().GenPowerShellCompletion(cmd.OutOrStdout())
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			return cmd.Root().GenPowerShellCompletion(f.IO.Out())
 		},
 	}
 

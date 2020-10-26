@@ -52,7 +52,7 @@ func NewStreamCmd(f *cmdutil.Factory) *cobra.Command {
 		Example: heredoc.Doc(`
 			# Interactively stream a dataset:
 			$ axiom stream
-						
+			
 			# Stream the "logs" dataset:
 			$ axiom stream -d logs
 		`),
@@ -62,7 +62,7 @@ func NewStreamCmd(f *cmdutil.Factory) *cobra.Command {
 		},
 
 		PreRunE: func(cmd *cobra.Command, args []string) error {
-			if err := cmdutil.Needs(
+			if err := cmdutil.ChainRunFuncs(
 				cmdutil.NeedsActiveBackend(f),
 				cmdutil.NeedsDatasets(f),
 			)(cmd, args); err != nil {

@@ -3,9 +3,11 @@ package completion
 import (
 	"github.com/MakeNowJust/heredoc"
 	"github.com/spf13/cobra"
+
+	"github.com/axiomhq/cli/internal/cmdutil"
 )
 
-func newFishCmd() *cobra.Command {
+func newFishCmd(f *cmdutil.Factory) *cobra.Command {
 	var completionNoDesc bool
 
 	cmd := &cobra.Command{
@@ -22,13 +24,13 @@ func newFishCmd() *cobra.Command {
 		Example: heredoc.Doc(`
 			# To load completions in your current shell session:
 			$ axiom completion fish | source
-
+			
 			# To load completions for every new session, execute once:
 			$ axiom completion fish > ~/.config/fish/completions/axiom.fish
 		`),
 
-		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			return cmd.Root().GenFishCompletion(cmd.OutOrStdout(), !completionNoDesc)
+		RunE: func(cmd *cobra.Command, _ []string) (err error) {
+			return cmd.Root().GenFishCompletion(f.IO.Out(), !completionNoDesc)
 		},
 	}
 

@@ -36,7 +36,7 @@ func newInfoCmd(f *cmdutil.Factory) *cobra.Command {
 		Example: heredoc.Doc(`
 			# Interactively get info of a dataset:
 			$ axiom dataset info
-
+			
 			# Get info of a dataset and provide the dataset name as an argument:
 			$ axiom dataset info nginx-logs
 		`),

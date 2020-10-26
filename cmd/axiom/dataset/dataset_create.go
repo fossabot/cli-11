@@ -35,7 +35,7 @@ func newCreateCmd(f *cmdutil.Factory) *cobra.Command {
 		Example: heredoc.Doc(`
 			# Interactively create a dataset:
 			$ axiom dataset create
-
+			
 			# Create a dataset and providen the dataset name as an argument:
 			$ axiom dataset create nginx-logs
 		`),

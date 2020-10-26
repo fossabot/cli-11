@@ -32,12 +32,12 @@ func newStatusCmd(f *cmdutil.Factory) *cobra.Command {
 		DisableFlagsInUseLine: true,
 
 		Args:              cobra.MaximumNArgs(1),
-		ValidArgsFunction: backendCompletionFunc(f),
+		ValidArgsFunction: backendCompletionFunc(f.Config),
 
 		Example: heredoc.Doc(`
 			# Check authentication status of all configured backends:
 			$ axiom auth status
-
+			
 			# Check authentication status of a specified backend:
 			$ axiom auth status my-axiom
 		`),
@@ -47,7 +47,7 @@ func newStatusCmd(f *cmdutil.Factory) *cobra.Command {
 				opts.Alias = args[0]
 			}
 
-			return cmdutil.Needs(
+			return cmdutil.ChainRunFuncs(
 				cmdutil.NeedsBackends(f),
 				cmdutil.NeedsValidBackend(f, opts.Alias),
 			)(cmd, args)

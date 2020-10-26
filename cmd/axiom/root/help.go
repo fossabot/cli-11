@@ -93,6 +93,7 @@ func rootHelpFunc(io *terminal.IO) func(*cobra.Command, []string) {
 		}
 
 		coreCommands := []string{}
+		managementCommands := []string{}
 		additionalCommands := []string{}
 		for _, c := range cmd.Commands() {
 			if c.Short == "" || c.Hidden {
@@ -102,6 +103,8 @@ func rootHelpFunc(io *terminal.IO) func(*cobra.Command, []string) {
 			s := padding.String(c.Name()+":", uint(c.NamePadding()+1)) + c.Short
 			if _, ok := c.Annotations["IsCore"]; ok {
 				coreCommands = append(coreCommands, s)
+			} else if _, ok := c.Annotations["IsManagement"]; ok {
+				managementCommands = append(managementCommands, s)
 			} else {
 				additionalCommands = append(additionalCommands, s)
 			}
@@ -130,6 +133,9 @@ func rootHelpFunc(io *terminal.IO) func(*cobra.Command, []string) {
 		}
 		if len(coreCommands) > 0 {
 			helpEntries = append(helpEntries, helpEntry{"CORE COMMANDS", strings.Join(coreCommands, "\n")})
+		}
+		if len(managementCommands) > 0 {
+			helpEntries = append(helpEntries, helpEntry{"MANAGEMENT COMMANDS", strings.Join(managementCommands, "\n")})
 		}
 		if len(additionalCommands) > 0 {
 			helpEntries = append(helpEntries, helpEntry{"ADDITIONAL COMMANDS", strings.Join(additionalCommands, "\n")})

@@ -25,13 +25,10 @@ func NewDatasetCmd(f *cmdutil.Factory) *cobra.Command {
 		`),
 
 		Annotations: map[string]string{
-			"IsCore": "true",
+			"IsManagement": "true",
 		},
 
-		PersistentPreRunE: cmdutil.Needs(
-			cmdutil.NeedsRootPersistentPreRunE(f),
-			cmdutil.NeedsActiveBackend(f),
-		),
+		PersistentPreRunE: cmdutil.NeedsActiveBackend(f),
 	}
 
 	cmd.AddCommand(newCreateCmd(f))

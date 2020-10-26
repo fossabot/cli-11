@@ -39,7 +39,7 @@ func newDeleteCmd(f *cmdutil.Factory) *cobra.Command {
 		Example: heredoc.Doc(`
 			# Interactively delete a dataset:
 			$ axiom dataset delete
-
+			
 			# Delete a dataset and providen the dataset name as an argument:
 			$ axiom dataset delete nginx-logs
 		`),
